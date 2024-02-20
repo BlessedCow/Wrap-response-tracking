@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 10px;
+      }
+
+      h1 {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+      button {
+        background-color: #3498db;
+        color: #ffffff;
+        border: none;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        margin-bottom: 10px;
+        cursor: pointer;
+      }
+
+      .myButton { 
+        color: rgb(255, 255, 255);
+        font-size: 16px;
+        line-height: 16px;
+        padding: 6px;
+        border-radius: 10px;
+        font-family: Arial, sans-serif;
+        font-weight: normal;
+        text-decoration: none;
+        font-style: normal;
+        font-variant: normal;
+        text-transform: none;
+        background-image: linear-gradient(to right, rgb(28, 110, 164) 0%, rgb(35, 136, 203) 50%, rgb(20, 78, 117) 100%);
+        border: 2px solid rgb(28, 110, 164);
+        display: inline-block;
+      }
+
+      .myButton:hover {
+        background: #1C6EA4;
+      }
+
+      .myButton:active {
+        background: #1C6EA4
+      }
+
+      ul {
+        list-style-type: none;
+        padding-left: 20px;
+      }
+
+      li {
+        margin-bottom: 5px;
+      }
+
+      a {
+        color: #3498db;
+        text-decoration: none;
+        cursor: pointer;
+      }
+          }
+    </style>
+  </head>
+  <body>
+    <h1>Tree View</h1>
+    <button onclick="goBack()">Back</button>
+    <ul id="treeView"></ul>
+
+    <script>
+      google.script.run.withSuccessHandler(updateTreeView).generateTreeView();
+
+      function updateTreeView(treeData) {
+        var treeView = document.getElementById('treeView');
+        treeView.innerHTML = buildTree(treeData);
+      }
+
+      function buildTree(node) {
+        var emailLabel = node.label.replace('@newalternatives.org', ''); // Strip domain
+        var html = '';
+
+        // Check if the node has a button flag
+        if (node.button) {
+          // Add a button class to the list item
+          html += '<li class="myButton" onclick="loadClients(\'' + node.label + '\')">' + emailLabel;
+        } else {
+          // Regular list item without a button
+          html += '<li><a href="#" onclick="loadClients(\'' + node.label + '\')">' + emailLabel + '</a>';
+        }
+
+        if (node.children && node.children.length > 0) {
+          html += '<ul>';
+          for (var i = 0; i < node.children.length; i++) {
+            html += buildTree(node.children[i]);
+          }
+          html += '</ul>';
+        }
+
+        html += '</li>';
+        return html;
+      }
+
+      function loadClients(clinicianEmail) {
+        google.script.run.withSuccessHandler(updateTreeView).generateClientTreeView(clinicianEmail);
+      }
+
+      function goBack() {
+        google.script.run.withSuccessHandler(updateTreeView).generateTreeView();
+      }
+    </script>
+  </body>
+</html>
