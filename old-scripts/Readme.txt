@@ -1,1 +1,1 @@
-Here are old scripts that I no longer use or are rarely used
+Here are old scripts that have given up on or found a better way to accomplish my goal, so these are no longer needed.
